@@ -1,5 +1,10 @@
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class StashAppClient:
     def __init__(self, base_url, api_key):
@@ -73,10 +78,17 @@ class StashAppClient:
         return self.execute_query(mutation, variables)
 
 def main():
+    # Load configuration from environment variables
+    stash_url = os.getenv('STASH_URL', 'http://localhost:9999')
+    api_key = os.getenv('STASH_API_KEY')
+    
+    if not api_key:
+        raise ValueError("STASH_API_KEY environment variable is required. Please check your .env file.")
+    
     # Configure your Stashapp connection
     client = StashAppClient(
-        base_url="http://ifyouseek8:9999",
-        api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJwc3ljaG9ob2xpYyIsImlhdCI6MTY5OTczNzkyNCwic3ViIjoiQVBJS2V5In0.XDs7C0TyfcUp13Kg_lSVl-A7HYA5h6lHZ92_lX9b1Zo"
+        base_url=stash_url,
+        api_key=api_key
     )
     
     # Find scenes with multiple files

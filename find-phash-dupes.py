@@ -1,14 +1,22 @@
 import requests
 import json
+import os
 from collections import defaultdict
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # ============================================================================
 # CONFIGURATION - Modify these settings for your Stash setup
 # ============================================================================
 
-# Stash server configuration
-STASH_URL = "http://ifyouseek8:9999"
-API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJwc3ljaG9ob2xpYyIsImlhdCI6MTY5OTczNzkyNCwic3ViIjoiQVBJS2V5In0.XDs7C0TyfcUp13Kg_lSVl-A7HYA5h6lHZ92_lX9b1Zo"
+# Stash server configuration (loaded from environment variables)
+STASH_URL = os.getenv('STASH_URL', 'http://localhost:9999')
+API_KEY = os.getenv('STASH_API_KEY')
+
+if not API_KEY:
+    raise ValueError("STASH_API_KEY environment variable is required. Please check your .env file.")
 
 # Duplicate detection settings
 PHASH_DISTANCE = 8  # 0 = exact match, higher values = more tolerant of differences.  Use multiples of 4.
