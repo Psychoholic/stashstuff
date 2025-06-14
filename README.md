@@ -28,7 +28,7 @@ Scene file management for scenarios with multiple files per scene.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/stashstuff.git
+   git clone https://github.com/Psychoholic/stashstuff.git
    cd stashstuff
    ```
 
