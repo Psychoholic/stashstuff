@@ -2,6 +2,8 @@
 
 I was running low on space one day and decided to run some tdarr workflows against my stash collection and it saved mountains of space but ended up creating a good number of duplicate scenes and orphaned the original scenes that had been so meticulously tagged and curated.  I scanned and identified all of the new things, had it generate the phash for each, then put this together to clean things up.   USE AT YOUR OWN RISK!
 
+Also worth noting this was mostly written with Cursor so there are some things I would have done differently but I wanted to see how good Claude4 was.
+
 A collection of Python scripts for managing duplicate scenes in [Stash](https://github.com/stashapp/stash) media server using the GraphQL API.
 
 ## Scripts
