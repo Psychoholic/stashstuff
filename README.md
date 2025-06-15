@@ -28,6 +28,17 @@ Scene file management for scenarios with multiple files per scene.
 - Batch processing with user confirmation
 - Safe file deletion with error handling
 
+### 🏷️ cleanup_overlapping_markers.py
+Scene marker cleanup tool that removes overlapping/duplicate markers within scenes.
+
+**Features:**
+- Finds markers that start within a configurable time tolerance
+- Keeps the marker with the lowest ID (typically oldest) when duplicates exist
+- Processes scenes in descending ID order (newest scenes first)
+- Configurable batch processing and time tolerance settings
+- Comprehensive dry-run mode for safe testing
+- Detailed progress tracking and reporting
+
 ## Installation
 
 1. **Clone the repository:**
@@ -70,6 +81,13 @@ Both scripts have configurable parameters at the top:
 - `BATCH_SIZE`: Number of duplicate groups to process per run
 - `DELAY_BETWEEN_MERGES`: Seconds to wait between operations
 
+**cleanup_overlapping_markers.py:**
+- `per_page`: Number of scenes to fetch per batch (100)
+- `max_scenes`: Limit for testing (10, set to None for all scenes)
+- `within_seconds`: Time tolerance for overlapping markers (2)
+- `dry_run`: Preview mode (True for testing, False for actual deletions)
+- `test_mode`: Single scene testing (False for batch processing)
+
 ## Usage
 
 ### Finding and Merging Duplicates
@@ -95,6 +113,29 @@ This script will:
 2. Set MKV files as primary
 3. Delete MP4 files after confirmation
 
+### Cleaning Up Overlapping Scene Markers
+
+```bash
+python cleanup_overlapping_markers.py
+```
+
+**Configuration Options:**
+- `per_page`: Number of scenes to fetch per batch (default: 100)
+- `max_scenes`: Limit total scenes processed for testing (default: 10)
+- `within_seconds`: Time tolerance for overlapping markers (default: 2 seconds)
+- `dry_run`: Preview mode - shows what would be deleted without actually deleting
+- `test_mode`: Process only one scene for initial testing
+
+**Example Workflow:**
+1. **Test Run**: Start with `max_scenes: 1, dry_run: True` to see sample output
+2. **Small Batch**: Set `max_scenes: 10, dry_run: True` to preview more scenes
+3. **Production**: Set `max_scenes: None, dry_run: False` to process all scenes
+
+**Time Tolerance Examples:**
+- `within_seconds: 0` - Only exact matches (120s = 120s)
+- `within_seconds: 2` - Markers within 2 seconds (120s and 122s considered overlapping)
+- `within_seconds: 5` - Markers within 5 seconds (120s and 125s considered overlapping)
+
 ## How It Works
 
 ### Duplicate Detection Process
@@ -111,6 +152,18 @@ This script will:
    - Merges all duplicate scenes into the destination
    - Sets MKV file as primary
    - Preserves all metadata and files
+
+### Scene Marker Cleanup Process
+
+1. **Scene Discovery**: Finds all scenes with markers, sorted by highest ID first
+2. **Marker Analysis**: For each scene, fetches all markers and groups them by time proximity
+3. **Overlap Detection**: Identifies markers that start within the configured time tolerance
+4. **Smart Deletion**: 
+   - Keeps the marker with the lowest ID (typically oldest/first created)
+   - Deletes all other markers in the overlapping group
+   - Preserves marker metadata and tags
+
+5. **Batch Processing**: Processes scenes in configurable batches for system performance
 
 ### Scoring System
 
@@ -155,6 +208,7 @@ Your Stash API key needs permissions for:
 - Merging scenes (`sceneMerge` mutation)
 - Updating scene metadata
 - Setting primary files
+- Reading and deleting scene markers (`sceneMarkerDestroy` mutation)
 
 ## Contributing
 
